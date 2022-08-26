@@ -3,32 +3,69 @@
  */
 package quotes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
 
 public class App {
 
+        static Gson gson = new Gson();
     public static void main(String[] args) throws IOException {
         System.out.println(returnSomething(5));
         System.out.println(returnSomething(6));
 
+        HttpURLConnection con = urlConnector();
+        RandomQuotes randomQuote = UrlReaderParser(con);
+        randomQuoteFileWriter(randomQuote);
+
     }
+// gson append (research) before writing read the json file first and save then add new quote to file
+    public static void randomQuoteFileWriter(RandomQuotes randomQuote) throws IOException{
+        File quoteFile = new File("./randomquote.json");
+        try(FileWriter quoteFileWriter = new FileWriter(quoteFile)){
+            gson.toJson(randomQuote, quoteFileWriter);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
     public static String returnSomething(int index) throws FileNotFoundException {
-        Gson gson = new Gson();
         File jsonFile = new File("C:\\Users\\treve\\class401\\quotes\\app\\src\\main\\resources\\recentQuotes.json");
         FileReader jsonReader = new FileReader(jsonFile);
         Type collectionType = new TypeToken<Collection<Quotes>>() {
         }.getType();
         ArrayList<Quotes> quotesArr = gson.fromJson(jsonReader, collectionType);
-//        System.out.println("Author: " + quotesArr.get(5).author + " Quote: " + quotesArr.get(5).text);
         return quotesArr.get(index).toString();
+    }
+
+
+
+    private static RandomQuotes UrlReaderParser(HttpURLConnection connection) throws IOException {
+        gson = new GsonBuilder().setPrettyPrinting().create();
+        InputStreamReader randomQuoteStreamReader = new InputStreamReader(connection.getInputStream());
+        String quoteData = null;
+        try (BufferedReader reader = new BufferedReader(randomQuoteStreamReader)) {
+            quoteData = reader.readLine();
+            System.out.println("Quote Data" + quoteData);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        RandomQuotes quotes = gson.fromJson(quoteData, RandomQuotes.class);
+        return quotes;
+    }
+
+    private static HttpURLConnection urlConnector() throws MalformedURLException, IOException {
+        URL url = new URL("https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        return connection;
     }
 }
