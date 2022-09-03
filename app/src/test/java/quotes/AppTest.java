@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AppTest {
     @Test
     public void appHasAuthor() throws FileNotFoundException {
-        App.returnSomething(5);
+        App.returnSomething(6);
         assertTrue(App.returnSomething(6).equals("Author: Louis Armstrong Quote: What we play is life."));
 
     }
