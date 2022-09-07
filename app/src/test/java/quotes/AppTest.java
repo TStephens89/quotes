@@ -14,6 +14,6 @@ class AppTest {
     public void appHasAuthor() throws FileNotFoundException {
         App.returnSomething(6);
         assertTrue(App.returnSomething(6).equals("Author: Louis Armstrong Quote: What we play is life."));
-
+        System.out.println("hello");
     }
 }
