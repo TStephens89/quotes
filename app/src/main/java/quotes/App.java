@@ -19,12 +19,13 @@ public class App {
 
         static Gson gson = new Gson();
     public static void main(String[] args) throws IOException {
-        System.out.println(returnSomething(5));
-        System.out.println(returnSomething(6));
+//        System.out.println(returnSomething(5));
+//        System.out.println(returnSomething(6));
 
         HttpURLConnection con = urlConnector();
         RandomQuotes randomQuote = UrlReaderParser(con);
         randomQuoteFileWriter(randomQuote);
+        System.out.println(randomQuote.toString());
 
     }
 // gson append (research) before writing read the json file first and save then add new quote to file
@@ -54,7 +55,7 @@ public class App {
         String quoteData = null;
         try (BufferedReader reader = new BufferedReader(randomQuoteStreamReader)) {
             quoteData = reader.readLine();
-            System.out.println("Quote Data" + quoteData);
+//            System.out.println("Quote Data" + quoteData);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

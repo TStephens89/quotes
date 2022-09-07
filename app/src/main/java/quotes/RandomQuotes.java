@@ -13,6 +13,15 @@ public class RandomQuotes {
         this.quoteAuthor = quoteAuthor;
 
     }
+
+    @Override
+    public String toString() {
+        return "RandomQuotes{" +
+                "quoteText='" + quoteText + '\'' +
+                ", quoteAuthor='" + quoteAuthor + '\'' +
+                '}';
+    }
+
     public String getQuoteText(){
         return quoteText;
     }
